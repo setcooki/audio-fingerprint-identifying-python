@@ -1,13 +1,14 @@
-from db import Database
-from config import get_config
-import sqlite3
 import sys
-from itertools import izip_longest
+import sqlite3
+from libs.db import Database
+from libs.config import get_config
+from itertools import zip_longest
 from termcolor import colored
 
 class SqliteDatabase(Database):
   TABLE_SONGS = 'songs'
   TABLE_FINGERPRINTS = 'fingerprints'
+  SQLITE_MAX_VARIABLE_NUMBER = 999
 
   def __init__(self):
     self.connect()
@@ -66,11 +67,11 @@ class SqliteDatabase(Database):
 
   def insert(self, table, params):
     keys = ', '.join(params.keys())
-    values = params.values()
+    values = list(params.values())
 
-    query = "INSERT INTO songs (%s) VALUES (?, ?)" % (keys);
+    query = "INSERT INTO songs (%s) VALUES ('%s','%s')" % (keys, values[0], values[1]);
 
-    self.cur.execute(query, values)
+    self.cur.execute(query)
     self.conn.commit()
 
     return self.cur.lastrowid
@@ -79,7 +80,7 @@ class SqliteDatabase(Database):
     def grouper(iterable, n, fillvalue=None):
       args = [iter(iterable)] * n
       return (filter(None, values) for values
-          in izip_longest(fillvalue=fillvalue, *args))
+          in zip_longest(fillvalue=fillvalue, *args))
 
     for split_values in grouper(values, 1000):
       query = "INSERT OR IGNORE INTO %s (%s) VALUES (?, ?, ?)" % (table, ", ".join(columns))

@@ -15,7 +15,7 @@ def printSummary():
     colored('%d song(s)', 'yellow'),        # songs
     colored('%d fingerprint(s)', 'yellow')  # fingerprints
   )
-  print msg % row
+  print(msg % row)
 
   return row[0] # total
 

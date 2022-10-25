@@ -14,3 +14,6 @@ config-development.json
 
 db/*.db
 db/*.db-journal
+
+mp3/*.mp3
+mic/*.mp3
